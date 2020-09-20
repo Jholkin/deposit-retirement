@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const router = Router();
+const transactionAPI = require('../controllers/transactionAPI');
 
-const depositController = require('../controllers/transactionAPI');
+router.post('/deposit', transactionAPI.deposit);
+router.post('/retirement', transactionAPI.retirement);
 
-router.post('/deposit', depositController.add);
-router.post('/retirement', depositController.retirement);
 module.exports = router;

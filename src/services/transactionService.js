@@ -1,20 +1,24 @@
-exports.retirement = function(saldo, amount) {
-    if (saldo > amount) {
-        return true;
-    } else {
-        return false;
-    }
+const modelTransaction = require('../Models/transaction');
+
+exports.deposit = async function(params){
+    if (!this.empty(params.account_id, params.amountToDeposit)) { throw {message: 'do not insert empty data in parameters'} }
+    const new_deposit = await new modelTransaction({ account_id, amountToDeposit, operation: 1 }).save();
+    //await new_deposit.save();
+    res.json({ account_id: new_deposit.account_id, balance: new_deposit.balance });
 }
+
+exports.retirement = function(params) {
+    if (!this.empty(params.amount, params.balance)) { throw {message: 'do not insert empty data in parameters'} }
+    if (!this.isAmountRetirementMinorBalance(params.amount, params.balance)) { throw {message: 'insufficient balance'} }
+    const new_retirement = await new modeltransaction({ amount, account_id, operation: 2 }).save();
+    //await new_retirement.save();
+    res.json({ account_id: new_retirement.account_id, balance: new_retirement.balance });
+}
+
 exports.isAmountRetirementMinorBalance = function(amount, balance) {
     return amount < balance ? true : false;
 }
 
-
 exports.empty = function(amount, account_id) {
-    if (amount.length != 0 && account_id.length != 0) {
-
-        return true
-    } else {
-        return false
-    }
+    return (amount.length != 0 && account_id.length != 0) ? true: false;
 }
