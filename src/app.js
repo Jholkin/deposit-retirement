@@ -3,7 +3,7 @@ const app = express();
 require('./config/database');
 
 // Routes
-const retiremetRouter = require('./routes/retirement');
+
 
 // Configuration
 const port = 3000;
