@@ -1,7 +1,11 @@
 const { model, Schema } = require('mongoose');
 
-const SchemaRetirement = new Schema({
+const SchemaTransaction = new Schema({
 
+    operation: {
+        type: Number,
+        require: true,
+    },
     amount: {
         type: Number,
         required: true,
@@ -13,7 +17,6 @@ const SchemaRetirement = new Schema({
 
 }, {
     timestamps: true,
-
 })
 
-Module.exports = model('retiro', SchemaRetirement);
+module.exports = model('transaction', SchemaTransaction);

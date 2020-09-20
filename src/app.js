@@ -17,16 +17,15 @@ const port = 3000;
 app.use(express.json());
 
 // Routes
-const retiremetRouter = require('./routes/retirement');
-const depostiRouter = require('./routes/deposit');
+const transactionRouter = require('./routes/transaction');
 
 // Functions
 app.get('/', (req, res) => {
     res.send('Hello Microservices');
 });
 
-app.use('/api/retirement', retiremetRouter);
-app.use('/api/deposit', depostiRouter);
+app.use('/api/transaction', transactionRouter);
+
 
 app.listen(port, () => {
     console.log(`Server run in port ${port}`);
