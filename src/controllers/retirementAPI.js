@@ -1,6 +1,6 @@
 const requirementService = require('../services/retirementService');
 
-exports.retirement = function (req, res) {
+exports.retirement = function(req, res) {
     const params = req.body;
     try {
         const data = requirementService.retirement(params);

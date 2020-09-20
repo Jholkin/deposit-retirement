@@ -1,12 +1,12 @@
-const moogose = require("mongoose");
+ const moogose = require("mongoose");
 
-moogose.set('useFindAndModify', false);
+ moogose.set('useFindAndModify', false);
 
-moogose.connect('mongodb+srv://terry:vargassantacruz@cluster0.rg7e0.mongodb.net/<dbname>?retryWrites=true&w=majority', {
+ moogose.connect('mongodb+srv://terry:vargassantacruz@cluster0.rg7e0.mongodb.net/<dbname>?retryWrites=true&w=majority', {
 
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
+     useNewUrlParser: true,
+     useUnifiedTopology: true,
+     useFindAndModify: false,
+     useCreateIndex: true,
 
-}).then(db => console.log('Db is connected', db.connection.host));
+ }).then(db => console.log('Db is connected', db.connection.host));

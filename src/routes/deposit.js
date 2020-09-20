@@ -1,8 +1,9 @@
 const { Router } = require('express');
+const routes = require('../routes/retirement');
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.send('Hello');
-});
+const depositController = require('../controllers/depositAPI');
 
+router.post('/add', depositController.add);
+router.put('/update', depositController.update);
 module.exports = router;
