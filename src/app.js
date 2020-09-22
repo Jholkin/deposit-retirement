@@ -1,29 +1,25 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const morgan = require('morgan');
 require('./config/database');
 
 
+// Middleware
+app.use(morgan('tiny'));
+app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// Routes
-
 
 // Configuration
 const port = 3000;
-
-
-// Middleware
-app.use(express.json());
 
 // Routes
 const transactionRouter = require('./routes/transaction');
 
 // Functions
-app.get('/', (req, res) => {
-    res.send('Hello Microservices');
-});
-
 app.use('/api/transaction', transactionRouter);
 
 
