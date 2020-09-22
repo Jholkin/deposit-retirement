@@ -1,6 +1,11 @@
 const Transaction = require('../Models/transaction');
 const errors = require('../config/errors');
 const transaction = require('../Models/transaction');
+const { json, response } = require('express');
+const config = require('mongoose-schema-jsonschema/config');
+const { array_jsonSchema } = require('mongoose-schema-jsonschema/lib/types');
+const mongoose = require('mongoose-schema-jsonschema')();
+
 
 let ACCOUNT = [
     { account_id: 1, balance: 100 },
@@ -76,8 +81,11 @@ exports.empty = function(amount, account_id) {
     return (amount.length != 0 && account_id.length != 0) ? true : false;
 }
 
-exports.listTranscation = async function(account_id) {
+exports.listTranscationes = async function(account_id) {
 
-    let account = await transaction.findOne({ account_id: account_id });
-    return account;
+
+    const arreglo = await transaction.find({ account_id: account_id }).exec();
+
+
+    return arreglo;
 }

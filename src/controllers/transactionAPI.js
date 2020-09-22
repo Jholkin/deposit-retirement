@@ -38,11 +38,16 @@ exports.retirement = function(req, res) {
     res.end();
 }
 
-exports.listTransaction = function(req, res) {
+exports.listTransaction = async function(req, res) {
+
+    const myJson = await transactionService.listTranscationes(req.params.account_id);
+
     try {
-        Lista = transactionService.listTranscation(req.params.account_id);
-        res.status(200).json(Lista);
-    } catch (e) {
-        res.status(400).json({ message: e })
+
+        res.status(200).json(myJson);
+    } catch (error) {
+        res.status(400).json({ message: error });
     }
+    res.end();
+
 }
