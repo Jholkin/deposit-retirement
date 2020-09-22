@@ -1,23 +1,24 @@
 const Transaction = require('../Models/transaction');
 const errors = require('../config/errors');
+const transaction = require('../Models/transaction');
 
 let ACCOUNT = [
-    {account_id: 1, balance: 100},
-    {account_id: 2, balance: 0},
-    {account_id: 3, balance: 20},
-    {account_id: 4, balance: 1000},
-    {account_id: 5, balance: 42},
+    { account_id: 1, balance: 100 },
+    { account_id: 2, balance: 0 },
+    { account_id: 3, balance: 20 },
+    { account_id: 4, balance: 1000 },
+    { account_id: 5, balance: 42 },
 ];
 
-exports.deposit =  function(params){
+exports.deposit = function(params) {
     try {
         if (!this.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
         // trae los datos del microservicio cuentas
         //let account = await microserviceAccount.findOne({account_id: params.account_id});
         let account = ACCOUNT.find(a => a.account_id == params.account_id);
-        if (account == null) {throw errors.errorFormat('FORBIDDEN');}
+        if (account == null) { throw errors.errorFormat('FORBIDDEN'); }
 
-        const transaction = new Transaction({ 
+        const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
             operation: 1,
@@ -31,7 +32,7 @@ exports.deposit =  function(params){
 
         // se envía la transación a log
         //await this.log({account_id: params.account_id, balance: account.balance});
-        
+
         const response = { account_id: transaction.account_id, balance: account.balance };
         return response;
     } catch (error) {
@@ -44,12 +45,12 @@ exports.retirement = function(params) {
     // trae los datos del microservicio cuentas
     //let account = await microserviceAccount.findOne({account_id: params.account_id});
     let account = ACCOUNT.find(a => a.account_id == params.account_id);
-    
+
     if (account == null) throw errors.errorFormat('FORBIDDEN');
 
-    if (!this.isAmountRetirementMinorBalance(params.amount, account.balance)) { throw {message: 'insufficient balance'} }
+    if (!this.isAmountRetirementMinorBalance(params.amount, account.balance)) { throw { message: 'insufficient balance' } }
 
-    const transaction = new Transaction({ 
+    const transaction = new Transaction({
         account_id: params.account_id,
         amount: params.amount,
         operation: 2,
@@ -62,7 +63,7 @@ exports.retirement = function(params) {
     //let accountSave = await microserviceAccount.findByIdAndUpdate(account);
     // se envía la transación a log
     //await this.log({account_id: params.account_id, balance: account.balance});
-    
+
     const response = { account_id: transaction.account_id, balance: account.balance };
     return response;
 }
@@ -72,5 +73,11 @@ exports.isAmountRetirementMinorBalance = function(amount, balance) {
 }
 
 exports.empty = function(amount, account_id) {
-    return (amount.length != 0 && account_id.length != 0) ? true: false;
+    return (amount.length != 0 && account_id.length != 0) ? true : false;
+}
+
+exports.listTranscation = async function(account_id) {
+
+    let account = await transaction.findOne({ account_id: account_id });
+    return account;
 }
