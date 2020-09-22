@@ -1,20 +1,22 @@
 const { model, Schema } = require('mongoose');
 
 const SchemaTransaction = new Schema({
-
-    operation: {
+    account_id: {
         type: Number,
-        require: true,
+        required: true
     },
     amount: {
         type: Number,
         required: true,
     },
-    account_id: {
+    operation: {
         type: Number,
-        required: true
+        require: true,
     },
-
+    movement: {
+        type: String,
+        require: true
+    }
 }, {
     timestamps: true,
 })
