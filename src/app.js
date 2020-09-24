@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 // Configuration
 const port = process.env.port || 3000;
-const host = process.env.host || '0.0.0.0'
+
 
 // Routes
 const transactionRouter = require('./routes/transaction');
