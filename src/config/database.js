@@ -1,9 +1,8 @@
  const moogose = require("mongoose");
- require('dotenv').config({ path: 'variables.env' })
 
  moogose.set('useFindAndModify', false);
 
- moogose.connect(process.env.DBMONGODB_URI, {
+ moogose.connect('mongodb+srv://terry:vargassantacruz@cluster0.rg7e0.mongodb.net/test?retryWrites=true&w=majority', {
 
      useNewUrlParser: true,
      useUnifiedTopology: true,
