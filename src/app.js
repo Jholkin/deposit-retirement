@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 require('./config/database');
-require('dotenv').config({ path: 'variables.env' });
 
 // Middleware
 app.use(morgan('tiny'));
