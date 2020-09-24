@@ -5,13 +5,14 @@ const transactionService = require('../services/transactionService');
  * 
  * @request {account_id, amountToDeposit} req 
  * @response {account_id: 15478qw8wer, balance: 100} res
- * @param {operation: {1: deposit, 2: retirement}}
+ * @param {operation: {0: deposit, 1: retirement}}
  */
 exports.deposit = function(req, res) {
     const params = req.body;
+
     try {
         const data = transactionService.deposit(params);
-        res.status(200).json({ account_id: data.account_id, balance: data.balance });
+        res.status(200).json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
     } catch (error) {
         /* console.log("ERROR: ", error);
         errorCode = error.errorCode || 403;
@@ -25,13 +26,13 @@ exports.deposit = function(req, res) {
  * 
  * @request {account_id, amountToRetirement, balance} req 
  * @response {account_id: 15478qw8wer, balance: 110} res
- * @param {operation: {1: deposit, 2: retirement}} 
+ * @param {operation: {0: deposit, 1: retirement}} 
  */
 exports.retirement = function(req, res) {
     const params = req.body;
     try {
         const data = transactionService.retirement(params);
-        res.status(200).json({ account_id: data.account_id, balance: data.balance });
+        res.status(200).json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
     } catch (error) {
         res.status(400).json({ message: error });
     }
