@@ -5,6 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('./config/database');
 
+
 // Middleware
 app.use(morgan('tiny'));
 app.use(cors());
@@ -24,8 +25,10 @@ const e = require('express');
 app.use('/api/transaction', transactionRouter);
 
 
+
 app.listen(port, () => {
     console.log(`Server run in port ${port}`);
+
 });
 
 module.exports = app;
