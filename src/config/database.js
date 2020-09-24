@@ -10,3 +10,5 @@
      useCreateIndex: true,
 
  }).then(db => console.log('Db is connected', db.connection.host));
+
+ exports.module = moogose;
