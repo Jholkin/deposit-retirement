@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 require('./config/database');
-
+require('dotenv').config({ path: 'variables.env' });
 
 // Middleware
 app.use(morgan('tiny'));
@@ -19,6 +19,7 @@ const host = process.env.host || '0.0.0.0'
 
 // Routes
 const transactionRouter = require('./routes/transaction');
+const e = require('express');
 
 // Functions
 app.use('/api/transaction', transactionRouter);
