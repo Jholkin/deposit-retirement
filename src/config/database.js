@@ -1,5 +1,5 @@
  const moogose = require("mongoose");
- require('dotenv').config({ path: './variables.env' })
+
 
  moogose.set('useFindAndModify', false);
 
