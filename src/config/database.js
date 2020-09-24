@@ -3,7 +3,7 @@
 
  moogose.set('useFindAndModify', false);
 
- moogose.connect('mongodb+srv://terry:vargassantacruz@cluster0.rg7e0.mongodb.net/<dbname>?retryWrites=true&w=majority', {
+ moogose.connect('mongodb+srv://terry:vargassantacruz@cluster0.rg7e0.mongodb.net/test?retryWrites=true&w=majority', {
 
      useNewUrlParser: true,
      useUnifiedTopology: true,
