@@ -12,7 +12,7 @@ exports.deposit = async function(params) {
         const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
-            operation: 0,
+            operation: params.operation,
             movement: 'DEPOSIT'
         });
         transaction.save();
@@ -37,7 +37,7 @@ exports.retirement = async function(params) {
         const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
-            operation: 1,
+            operation: params.operation,
             movement: 'RETIREMENT'
         });
         transaction.save();

@@ -25,10 +25,10 @@ exports.deposit = async function(req, res) {
  * @response {account_id: 15478qw8wer, balance: 110} res
  * @param {operation: {0: deposit, 1: retirement}} 
  */
-exports.retirement = function(req, res) {
+exports.retirement = async function(req, res) {
     const params = req.body;
     try {
-        const data = transactionService.retirement(params);
+        const data = await transactionService.retirement(params);
         res.json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
     } catch (error) {
         console.log("ERROR: ", error);

@@ -8,7 +8,7 @@ const util = require('../src/services/util');
 
 describe('Deposit', () => {
     it('Should deposit ok', async () => {
-        let params = { account_id: 98787656789876, amount: 20 };
+        let params = { account_id: 98787656789876, amount: 20, operation: 0 };
         let balanceBeforeDeposit = util.getBalance(params.account_id);
         let amountToDeposit = params.amount;
         const res = await transactionService.deposit(params);
@@ -34,7 +34,7 @@ describe('Deposit', () => {
 
 describe('Retirement', () => {
     it('Should retirement ok', async () => {
-        let params = { account_id: 98787656789876, amount: 1000 };
+        let params = { account_id: 98787656789876, amount: 1000, operation: 1 };
         let balanceBeforeRetirement = util.getBalance(params.account_id);
         let amountToRetirement = params.amount;
 
