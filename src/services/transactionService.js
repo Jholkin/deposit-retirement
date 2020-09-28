@@ -1,18 +1,13 @@
 const Transaction = require('../Models/transaction');
 const errors = require('../config/errors');
-const transaction = require('../Models/transaction');
-const { json, response, urlencoded } = require('express');
-const config = require('mongoose-schema-jsonschema/config');
-const { array_jsonSchema } = require('mongoose-schema-jsonschema/lib/types');
-const { get } = require('../routes/transaction');
-const mongoose = require('mongoose-schema-jsonschema')();
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const util = require('./util');
 
 
-
-exports.deposit = function(params) {
+exports.deposit = async function(params) {
     try {
-        if (!this.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
+        if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
+        var balance = util.getBalance(params.account_id);
+        //if(balance == 0) { throw {message: 'account not found'};} 
 
         const transaction = new Transaction({
             account_id: params.account_id,
@@ -20,31 +15,24 @@ exports.deposit = function(params) {
             operation: 0,
             movement: 'DEPOSIT'
         });
-
         transaction.save();
 
-        var balance = GetBalance(params.account_id);
+        const balanceActual = parseFloat(balance.amount) + parseFloat(transaction.amount);
+        let update = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
 
-        const BalanceActual = parseInt(balance.amount) + parseInt(transaction.amount);
-
-
-
-        const response = { account_id: transaction.account_id, balance: BalanceActual, operation: transaction.operation };
+        const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         return response;
     } catch (error) {
         throw error;
     }
 }
 
-exports.retirement = function(params) {
+exports.retirement = async function(params) {
     try {
-        if (!this.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST') }
-        // trae los datos del microservicio cuentas
-        //let account = await microserviceAccount.findOne({account_id: params.account_id});
-        /* let account = ACCOUNT.find(a => a.account_id == params.account_id);
-         */
+        if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST') }
+        var balance = util.getBalance(params.account_id);
         /* if (account == null) throw errors.errorFormat('FORBIDDEN'); */
-        if (!this.isAmountRetirementMinorBalance(params.amount, account.balance)) { throw { message: 'insufficient balance' } }
+        if (!this.isAmountRetirementMinorBalance(params.amount, balance.amount)) { throw errors.errorFormat('INSUFFICIENT_BALANCE'); }
 
         const transaction = new Transaction({
             account_id: params.account_id,
@@ -54,14 +42,13 @@ exports.retirement = function(params) {
         });
         transaction.save();
 
-        var balance = GetBalance(params.account_id);
+        const balanceActual = parseFloat(balance.amount) - parseFloat(transaction.amount);
+        let update = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
 
-        const BalanceActual = parseInt(balance.amount) - parseInt(transaction.amount);
-
-
-        const response = { account_id: transaction.account_id, balance: account.balance, operation: transaction.operation };
+        const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         return response;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -70,28 +57,8 @@ exports.isAmountRetirementMinorBalance = function(amount, balance) {
     return amount <= balance ? true : false;
 }
 
-exports.empty = function(amount, account_id) {
-    return (amount.length != 0 && account_id.length != 0) ? true : false;
-}
-
 exports.listTranscationes = async function(account_id) {
-
-
-    const arreglo = await transaction.find({ account_id: account_id }).exec();
-
+    const arreglo = await Transaction.find({ account_id: account_id }).exec();
     return arreglo;
-
 }
 
-function Get(url) {
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET", url, false);
-    Httpreq.send(null);
-    return Httpreq.responseText;
-}
-
-function GetBalance(param) {
-    let account = "https://apigesbanc.herokuapp.com/api/v1/checkbalance/" + param;
-    var balance = JSON.parse(Get(account));
-    return balance;
-}

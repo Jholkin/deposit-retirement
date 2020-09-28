@@ -2,6 +2,7 @@ const ERRORS = [
     {code: 400, type: 'BAD_REQUEST', message: 'The params are empty'},
     {code: 403, type: 'FORBIDDEN', message: 'The authentication for de microservice are incorrect'},
     {code: 400, type: 'ACCESS_DENIED', message: 'The authentication for de microservice are incorrect'},
+    {code: 400, type: 'INSUFFICIENT_BALANCE', message: 'The balance in account is minor for to movement'},
 ];
 
 exports.errorFormat = function (type, message = null) {

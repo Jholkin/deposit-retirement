@@ -7,17 +7,14 @@ const transactionService = require('../services/transactionService');
  * @response {account_id: 15478qw8wer, balance: 100} res
  * @param {operation: {0: deposit, 1: retirement}}
  */
-exports.deposit = function(req, res) {
+exports.deposit = async function(req, res) {
     const params = req.body;
-
     try {
-        const data = transactionService.deposit(params);
-        res.status(200).json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
+        const data = await transactionService.deposit(params);
+        res.json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
     } catch (error) {
-        /* console.log("ERROR: ", error);
-        errorCode = error.errorCode || 403;
-        res.status(errorCode).json(error); */
-        res.status(403).send({ message: error });
+        console.log("error: ",error);
+        res.status(500).json(error);
     }
     res.end();
 }
@@ -32,22 +29,21 @@ exports.retirement = function(req, res) {
     const params = req.body;
     try {
         const data = transactionService.retirement(params);
-        res.status(200).json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
+        res.json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
     } catch (error) {
-        res.status(400).json({ message: error });
+        console.log("ERROR: ", error);
+        res.status(500).send(error);
     }
     res.end();
 }
 
 exports.listTransaction = async function(req, res) {
-
-    const myJson = await transactionService.listTranscationes(req.params.account_id);
-
     try {
-
-        res.status(200).json(myJson);
+        const myJson = await transactionService.listTranscationes(req.params.account_id);
+        res.json(myJson);
     } catch (error) {
-        res.status(400).json({ message: error });
+        console.log("ERROR: ",error);
+        res.status(500).json(error);
     }
     res.end();
 
