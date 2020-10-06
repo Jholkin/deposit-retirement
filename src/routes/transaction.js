@@ -1,8 +1,13 @@
 const { Router } = require('express');
 const router = Router();
+const util = require('../services/util');
 const transactionAPI = require('../controllers/transactionAPI');
 
-router.post('/deposit', transactionAPI.deposit);
-router.post('/retirement', transactionAPI.retirement);
-router.get('/List/:account_id', transactionAPI.listTransaction);
+const ensureToken = util.validatedToken;
+
+router.get('/token', transactionAPI.getToken);
+router.post('/deposit', ensureToken, transactionAPI.deposit);
+router.post('/retirement', ensureToken, transactionAPI.retirement);
+router.get('/List/:account_id', ensureToken, transactionAPI.listTransaction);
+
 module.exports = router;

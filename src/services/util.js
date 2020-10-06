@@ -1,6 +1,38 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
+exports.createToken = function(client){
+    console.log(client);
+    let payload = {
+        sub: client.account_id,
+        iat: moment().unix(),
+        exp: moment().add(14,"days").unix()
+    }
+    return jwt.sign(payload, `${process.env.TOKEN_KEY}`);
+}
+
+exports.validatedToken = function ensureToken(req, res, next) {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader != 'undefined') {
+        const bearerToken = bearerHeader.split(" ")[1];
+        req.token = bearerToken;
+        jwt.verify(req.token, `${process.env.KEY}`, (err, data) => {
+            if(err) {
+                res.status(403).json({error: 'Unauthorized'});
+            } else {
+                res.json({
+                    data: data.client
+                });
+                console.log('Access');
+                next();
+            }
+        });
+    } else {
+        res.status(403).json({error: 'Token not found'});
+    }
+}
 
 function get (url, method) {
     var Httpreq = new XMLHttpRequest(); // a new request

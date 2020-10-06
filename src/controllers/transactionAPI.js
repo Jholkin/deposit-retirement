@@ -1,5 +1,12 @@
 const transaction = require('../Models/transaction');
 const transactionService = require('../services/transactionService');
+const util = require('../services/util');
+
+exports.getToken = function(req, res) {
+    const client = req.body;
+    let token = util.createToken(client);
+    res.json({"token": token});
+}
 
 /**
  * 
@@ -46,5 +53,4 @@ exports.listTransaction = async function(req, res) {
         res.status(500).json(error);
     }
     res.end();
-
 }

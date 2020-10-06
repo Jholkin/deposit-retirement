@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 require('./config/database');
-
 
 // Middleware
 app.use(morgan('tiny'));
@@ -16,19 +16,14 @@ app.use(bodyParser.json());
 // Configuration
 const port = process.env.port || 3000;
 
-
 // Routes
 const transactionRouter = require('./routes/transaction');
-const e = require('express');
 
 // Functions
 app.use('/api/transaction', transactionRouter);
 
-
-
 app.listen(port, () => {
-    console.log(`Server run in port ${port}`);
-
+    console.log(`Server run ins port ${port}`);
 });
 
 module.exports = app;
