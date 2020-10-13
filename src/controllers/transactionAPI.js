@@ -2,10 +2,14 @@ const transaction = require('../Models/transaction');
 const transactionService = require('../services/transactionService');
 const util = require('../services/util');
 
-exports.getToken = function(req, res) {
-    const client = req.body;
-    let token = util.createToken(client);
-    res.json({"token": token});
+exports.getToken = function(req, res){
+    const params = req.body;
+    try {
+        const data = util.createToken(params);
+        res.json({token:data});
+    } catch (error) {
+        throw error;
+    }
 }
 
 /**
@@ -36,10 +40,12 @@ exports.retirement = async function(req, res) {
     const params = req.body;
     try {
         const data = await transactionService.retirement(params);
+        console.log(data);
         res.json({ account_id: data.account_id, balance: data.balance, operation: data.operation });
+        res.end();
     } catch (error) {
         console.log("ERROR: ", error);
-        res.status(500).send(error);
+        return res.status(500).send(error);
     }
     res.end();
 }

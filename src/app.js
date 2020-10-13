@@ -3,7 +3,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-const jwt = require('jsonwebtoken');
 require('./config/database');
 
 // Middleware
@@ -20,7 +19,7 @@ const port = process.env.port || 3000;
 const transactionRouter = require('./routes/transaction');
 
 // Functions
-app.use('/api/transaction', transactionRouter);
+app.use('/api/v2/transaction', transactionRouter);
 
 app.listen(port, () => {
     console.log(`Server run ins port ${port}`);

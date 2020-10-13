@@ -1,10 +1,8 @@
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 
 exports.createToken = function(client){
-    console.log(client);
     let payload = {
         sub: client.account_id,
         iat: moment().unix(),
@@ -25,7 +23,7 @@ exports.validatedToken = function ensureToken(req, res, next) {
                 res.json({
                     data: data.client
                 });
-                console.log('Access');
+                console.log('Access successful');
                 next();
             }
         });
@@ -34,17 +32,16 @@ exports.validatedToken = function ensureToken(req, res, next) {
     }
 }
 
-function get (url, method) {
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open(method, url, false);
-    Httpreq.send(null);
-    return Httpreq.responseText;
-}
-
-exports.getBalance = function (param) {
-    let account = "https://apigesbanc.herokuapp.com/api/v1/checkbalance/" + param;
-    var balance = JSON.parse(get(account, "GET"));
-    return balance;
+exports.getBalance = async function (param) {
+    try {
+        const getBalance = await fetch('https://apigesbanc.herokuapp.com/api/v1/checkbalance/' + param, {
+            method: 'GET',
+            headers: {"Content-Type":"application/json"}
+        });
+        return balance = await getBalance.json();
+    } catch (error) {
+        throw error;
+    }
 }
 
 exports.sendBalance = async (param, account_id) => {
@@ -55,6 +52,34 @@ exports.sendBalance = async (param, account_id) => {
             body: JSON.stringify(param)
         });
         return content = await rawResponse.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.getToken = async()=>{
+    try {
+        const getToken = await fetch('https://gestion-logs-integracion2020.herokuapp.com/api/v2/jwt', {
+            method: 'GET',
+            headers: {"Content-Type":"application/json"}
+        });
+        return token = await getToken.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.log = async(params, token)=>{
+    try {
+        const res = await fetch('https://gestion-logs-integracion2020.herokuapp.com/api/v2/log/add', {
+            method: 'POST',
+            headers: {"Content-Type":"application/json","Authorization":"jwt "+token.token},
+            body: JSON.stringify(params)
+        });
+        /* .then(response => response.json())
+        .then(response => console.log(response)); */
+        //console.log(await res.json());
+        return content = await res.formData();
     } catch (error) {
         throw error;
     }

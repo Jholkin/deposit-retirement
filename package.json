@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon src/app.js",
-        "test": "mocha -t 10000 test/transactionTest.js --exit"
+        "dev": "nodemon src/app.js",
+        "test": "mocha -t 10000 test/transactionTest.js --grep \"Should retirement ok\" --exit"
     },
     "keywords": [],
     "author": "",
@@ -25,8 +25,7 @@
         "mongoose": "^5.10.6",
         "mongoose-schema-jsonschema": "^1.4.4",
         "node-fetch": "^2.6.1",
-        "request": "^2.88.2",
-        "xmlhttprequest": "^1.8.0"
+        "request": "^2.88.2"
     },
     "devDependencies": {
         "morgan": "^1.10.0",

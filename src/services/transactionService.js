@@ -6,19 +6,19 @@ const util = require('./util');
 exports.deposit = async function(params) {
     try {
         if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
-        var balance = util.getBalance(params.account_id);
-        //if(balance == 0) { throw {message: 'account not found'};} 
-
+        var balance = await util.getBalance(params.account_id);
         const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
-            operation: params.operation,
-            movement: 'DEPOSIT'
+            operation: 0,
+            movement: 'deposit',
+            create: new Date()
         });
-        transaction.save();
+        await transaction.save();
 
-        const balanceActual = parseFloat(balance.amount) + parseFloat(transaction.amount);
-        let update = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let response1 = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let token = await util.getToken();
+        let responseLog = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
 
         const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         return response;
@@ -30,25 +30,28 @@ exports.deposit = async function(params) {
 exports.retirement = async function(params) {
     try {
         if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST') }
-        var balance = util.getBalance(params.account_id);
+        var balance = await util.getBalance(params.account_id);
         /* if (account == null) throw errors.errorFormat('FORBIDDEN'); */
         if (!this.isAmountRetirementMinorBalance(params.amount, balance.amount)) { throw errors.errorFormat('INSUFFICIENT_BALANCE'); }
 
         const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
-            operation: params.operation,
-            movement: 'RETIREMENT'
+            operation: 1,
+            movement: 'withdraw',
+            create: new Date()
         });
-        transaction.save();
+        await transaction.save();
 
-        const balanceActual = parseFloat(balance.amount) - parseFloat(transaction.amount);
-        let update = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
-
+        var balanceUpdated = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let token = await util.getToken();
+        console.log("token de paul marica: ", token);
+        let res = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
+        console.log("se envio el registro al log...", res);
         const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
+        //console.log(response);
         return response;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
