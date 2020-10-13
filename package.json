@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon src/app.js",
+        "start": "nodemon src/app.js",
         "test": "mocha -t 10000 test/transactionTest.js --grep \"Should retirement ok\" --exit"
     },
     "keywords": [],
