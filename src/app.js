@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Configuration
-const port = process.env.port || 3000;
+app.set('port', process.env.PORT || 3000);
 
 // Routes
 const transactionRouter = require('./routes/transaction');
@@ -21,8 +21,8 @@ const transactionRouter = require('./routes/transaction');
 // Functions
 app.use('/api/v2/transaction', transactionRouter);
 
-app.listen(port, () => {
-    console.log(`Server run ins port ${port}`);
+app.listen(app.get('port'), () => {
+    console.log(`Server run ins port ${app.get('port')}`);
 });
 
 module.exports = app;
