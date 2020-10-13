@@ -1,0 +1,23 @@
+config:
+  target: "https://microservicetransactionv2.herokuapp.com"
+  phases:
+    - duration: 10
+      arrivalRate: 2
+scenarios:
+  - name: "Get token and Deposit"
+    flow:
+      - get:
+          url: "/api/v2/transaction/token"
+          json: 
+            account_id: 98787656789876
+          capture:
+            json: "$.token"
+            as: "token"
+      - post:
+          url: "/api/v2/transaction/deposit"
+          headers:
+            Authorization: "Bearer {{ token }}"
+          json:
+            account_id: 98787656789876
+            amount: 10
+      - log: "Send a request to /deposit with {{ token }}, {{ account_id }}, {{ amount }}"
