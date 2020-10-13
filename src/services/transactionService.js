@@ -45,9 +45,7 @@ exports.retirement = async function(params) {
 
         var balanceUpdated = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
         let token = await util.getToken();
-        console.log("token de paul marica: ", token);
         let res = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
-        console.log("se envio el registro al log...", res);
         const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         //console.log(response);
         return response;

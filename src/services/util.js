@@ -20,9 +20,9 @@ exports.validatedToken = function ensureToken(req, res, next) {
             if(err) {
                 res.status(403).json({error: 'Unauthorized'});
             } else {
-                res.json({
+                /* res.json({
                     data: data.client
-                });
+                }); */
                 console.log('Access successful');
                 next();
             }
@@ -79,7 +79,7 @@ exports.log = async(params, token)=>{
         /* .then(response => response.json())
         .then(response => console.log(response)); */
         //console.log(await res.json());
-        return content = await res.formData();
+        return await res.json();
     } catch (error) {
         throw error;
     }
