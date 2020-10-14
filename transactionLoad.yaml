@@ -20,4 +20,4 @@ scenarios:
           json:
             account_id: 98787656789876
             amount: 10
-      - log: "Send a request to /deposit with {{ token }}, {{ account_id }}, {{ amount }}"
+      - log: "Send a request to /deposit with {{ token }}"
