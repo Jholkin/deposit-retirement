@@ -1,0 +1,7 @@
+{
+    "step1": "heroku container:login",
+    "step2": "heroku create -a name-project",
+    "step3": "heroku container:push web -a name-project-created",
+    "step4": "heroku container:release web -a name-project-created",
+    "step5": "heroku open"
+}
