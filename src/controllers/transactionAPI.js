@@ -2,6 +2,11 @@ const transaction = require('../Models/transaction');
 const transactionService = require('../services/transactionService');
 const util = require('../services/util');
 
+/**
+ * 
+ * @request {account_id} req 
+ * @response {token: "asf56sdfa665f32sdafeeg"} res 
+ */
 exports.getToken = function(req, res){
     const params = req.body;
     try {
@@ -50,6 +55,11 @@ exports.retirement = async function(req, res) {
     res.end();
 }
 
+/**
+ * 
+ * @request {account_id} req 
+ * @param {} res 
+ */
 exports.listTransaction = async function(req, res) {
     try {
         const myJson = await transactionService.listTranscationes(req.params.account_id);

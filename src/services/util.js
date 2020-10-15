@@ -1,6 +1,10 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const kafka = require('kafka-node');
+
+const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
+const producer = new kafka.Producer(client);
 
 exports.createToken = function(client){
     let payload = {
@@ -20,9 +24,6 @@ exports.validatedToken = function ensureToken(req, res, next) {
             if(err) {
                 res.status(403).json({error: 'Unauthorized'});
             } else {
-                /* res.json({
-                    data: data.client
-                }); */
                 console.log('Access successful');
                 next();
             }
@@ -38,7 +39,7 @@ exports.getBalance = async function (param) {
             method: 'GET',
             headers: {"Content-Type":"application/json"}
         });
-        return balance = await getBalance.json();
+        return await getBalance.json();
     } catch (error) {
         throw error;
     }
@@ -51,10 +52,27 @@ exports.sendBalance = async (param, account_id) => {
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify(param)
         });
-        return content = await rawResponse.json();
+        return await rawResponse.json();
     } catch (error) {
         throw error;
     }
+}
+
+exports.sendBalance_v2 = async function (params, account_id) {
+    let payloads = [
+        {
+            topic: 'test',
+            messages: params
+        }
+    ];
+    await producer.connect();
+    producer.on('ready', function() {
+        let push_message = producer.send(payloads, (err, data) => {
+            if(err) { console.log('[kafka-producer -> test]: borker failed'); }
+            else { console.log('[kafka-producer -> test]: borker success'); }
+        });
+        console.log(push_message);
+    })
 }
 
 exports.getToken = async()=>{
@@ -63,7 +81,7 @@ exports.getToken = async()=>{
             method: 'GET',
             headers: {"Content-Type":"application/json"}
         });
-        return token = await getToken.json();
+        return  await getToken.json();
     } catch (error) {
         throw error;
     }
