@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+require('dotenv').config({ path: '.env' });
 
 exports.createToken = function(client){
     let payload = {
@@ -36,9 +37,11 @@ exports.getBalance = async function (param) {
     try {
         const getBalance = await fetch('https://apigesbanc.herokuapp.com/api/v1/checkbalance/' + param, {
             method: 'GET',
-            headers: {"Content-Type":"application/json"}
+            headers: {"Content-Type":"application/json", "Authorization":`Bearer ${process.env.APIGESTBANC_TOKEN}`}
         });
-        return balance = await getBalance.json();
+        let balance = await getBalance.json();
+        console.log("response: ", balance);
+        return balance;
     } catch (error) {
         throw error;
     }
@@ -48,7 +51,7 @@ exports.sendBalance = async (param, account_id) => {
     try {
         const rawResponse = await fetch('https://apigesbanc.herokuapp.com/api/v1/updateamount/' + account_id, {
             method: 'PUT',
-            headers: {"Content-Type":"application/json"},
+            headers: {"Content-Type":"application/json", "Authorization":`Bearer ${process.env.APIGESTBANC_TOKEN}`},
             body: JSON.stringify(param)
         });
         return content = await rawResponse.json();

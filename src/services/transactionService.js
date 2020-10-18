@@ -6,6 +6,8 @@ const util = require('./util');
 exports.deposit = async function(params) {
     try {
         if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
+        //let resToken = await util.getToken();
+        //console.log(resToken);
         var balance = await util.getBalance(params.account_id);
         const transaction = new Transaction({
             account_id: params.account_id,
@@ -30,6 +32,7 @@ exports.deposit = async function(params) {
 exports.retirement = async function(params) {
     try {
         if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST') }
+        //let resToken = await util.getToken();
         var balance = await util.getBalance(params.account_id);
         /* if (account == null) throw errors.errorFormat('FORBIDDEN'); */
         if (!this.isAmountRetirementMinorBalance(params.amount, balance.amount)) { throw errors.errorFormat('INSUFFICIENT_BALANCE'); }
