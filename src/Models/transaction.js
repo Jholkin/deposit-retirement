@@ -1,5 +1,4 @@
 const { model, Schema } = require('mongoose');
-const schema_jsonSchema = require('mongoose-schema-jsonschema/lib/schema');
 
 const SchemaTransaction = new Schema({
     account_id: {

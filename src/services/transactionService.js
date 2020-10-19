@@ -1,15 +1,11 @@
 const Transaction = require('../Models/transaction');
 const errors = require('../config/errors');
 const util = require('./util');
-const kafka = require('kafka-node');
-
-const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
-const producer = new kafka.Producer(client);
 
 exports.deposit = async function(params) {
     try {
         if (!util.empty(params.account_id, params.amount)) { throw errors.errorFormat('BAD_REQUEST'); }
-        //var balance = await util.getBalance(params.account_id);
+        var balance = await util.getBalance(params.account_id);
         const transaction = new Transaction({
             account_id: params.account_id,
             amount: params.amount,
@@ -19,22 +15,7 @@ exports.deposit = async function(params) {
         });
         await transaction.save();
 
-        // enviar el balance actualizado
-        let payloads = [
-            {
-                topic: 'test',
-                messages: params
-            }
-        ];
-        await producer.connect();
-        producer.on('ready', function() {
-            let push_message = producer.send(payloads, (err, data) => {
-                if(err) { console.log('[kafka-producer -> test]: borker failed'); }
-                else { console.log('[kafka-producer -> test]: borker success'); }
-            });
-            console.log(push_message);
-        })
-        //let response1 = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let response1 = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
         let token = await util.getToken();
         let responseLog = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
 
