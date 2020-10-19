@@ -17,7 +17,7 @@ exports.validatedToken = function ensureToken(req, res, next) {
     if (typeof bearerHeader != 'undefined') {
         const bearerToken = bearerHeader.split(" ")[1];
         req.token = bearerToken;
-        jwt.verify(req.token, `${process.env.KEY}`, (err, data) => {
+        jwt.verify(req.token, `${process.env.TOKEN_KEY}`, (err, data) => {
             if(err) {
                 res.status(403).json({error: 'Unauthorized'});
             } else {
