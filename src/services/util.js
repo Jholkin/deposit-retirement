@@ -1,10 +1,6 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const kafka = require('kafka-node');
-
-const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
-const producer = new kafka.Producer(client);
 
 exports.createToken = function(client){
     let payload = {
@@ -58,23 +54,6 @@ exports.sendBalance = async (param, account_id) => {
     }
 }
 
-exports.sendBalance_v2 = async function (params, account_id) {
-    let payloads = [
-        {
-            topic: 'test',
-            messages: params
-        }
-    ];
-    await producer.connect();
-    producer.on('ready', function() {
-        let push_message = producer.send(payloads, (err, data) => {
-            if(err) { console.log('[kafka-producer -> test]: borker failed'); }
-            else { console.log('[kafka-producer -> test]: borker success'); }
-        });
-        console.log(push_message);
-    })
-}
-
 exports.getToken = async()=>{
     try {
         const getToken = await fetch('https://gestion-logs-integracion2020.herokuapp.com/api/v2/jwt', {
@@ -94,9 +73,6 @@ exports.log = async(params, token)=>{
             headers: {"Content-Type":"application/json","Authorization":"jwt "+token.token},
             body: JSON.stringify(params)
         });
-        /* .then(response => response.json())
-        .then(response => console.log(response)); */
-        //console.log(await res.json());
         return await res.json();
     } catch (error) {
         throw error;
