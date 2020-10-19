@@ -1,6 +1,5 @@
  const moogose = require("mongoose");
 
- moogose.set('useFindAndModify', false);
- moogose.connect("mongodb://localhost/transactions").then(db => console.log('Db is connected', db.connection.host));
+ moogose.connect("mongodb://localhost:27017/transactions").then(db => console.log('Db is connected', db.connection.host));
 
  exports.module = moogose;
