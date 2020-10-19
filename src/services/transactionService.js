@@ -15,7 +15,7 @@ exports.deposit = async function(params) {
         });
         await transaction.save();
 
-        let response1 = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let response1 = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
         let token = await util.getToken();
         let responseLog = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
 
