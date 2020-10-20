@@ -1,10 +1,6 @@
 const Transaction = require('../Models/transaction');
 const errors = require('../config/errors');
 const util = require('./util');
-const kafka = require('kafka-node');
-
-const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
-const producer = new kafka.Producer(client);
 
 exports.deposit = async function(params) {
     try {
@@ -19,24 +15,9 @@ exports.deposit = async function(params) {
         });
         await transaction.save();
 
-        // enviar el balance actualizado
-        let payloads = [
-            {
-                topic: 'test',
-                messages: params
-            }
-        ];
-        await producer.connect();
-        producer.on('ready', function() {
-            let push_message = producer.send(payloads, (err, data) => {
-                if(err) { console.log('[kafka-producer -> test]: borker failed'); }
-                else { console.log('[kafka-producer -> test]: borker success'); }
-            });
-            console.log(push_message);
-        })
-        //let response1 = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        let response1 = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
         let token = await util.getToken();
-        let responseLog = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
+        let responseLog = await util.log_v2({accountId: transaction.account_id, event: transaction.movement}, token);
 
         const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         return response;
@@ -61,9 +42,9 @@ exports.retirement = async function(params) {
         });
         await transaction.save();
 
-        var balanceUpdated = await util.sendBalance({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
+        var balanceUpdated = await util.sendBalance_v2({amount: transaction.amount, operacion: transaction.operation}, params.account_id);
         let token = await util.getToken();
-        let res = await util.log({accountId: transaction.account_id, event: transaction.movement}, token);
+        let res = await util.log_v2({accountId: transaction.account_id, event: transaction.movement}, token);
         const response = { account_id: transaction.account_id, balance: transaction.amount, operation: transaction.movement };
         return response;
     } catch (error) {

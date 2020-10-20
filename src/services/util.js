@@ -1,10 +1,13 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const kafka = require('kafka-node');
+const { Kafka } = require('kafkajs');
 
-const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
-const producer = new kafka.Producer(client);
+const kafka = new Kafka({
+    clientId: 'my-app',
+    brokers: ['localhost:9091']
+});
+const producer = kafka.producer();
 
 exports.createToken = function(client){
     let payload = {
@@ -59,20 +62,21 @@ exports.sendBalance = async (param, account_id) => {
 }
 
 exports.sendBalance_v2 = async function (params, account_id) {
-    let payloads = [
-        {
+    const data = {
+        params: params,
+        account_id: account_id
+    }
+    try {
+        await producer.connect();
+        await producer.send({
             topic: 'test',
-            messages: params
-        }
-    ];
-    await producer.connect();
-    producer.on('ready', function() {
-        let push_message = producer.send(payloads, (err, data) => {
-            if(err) { console.log('[kafka-producer -> test]: borker failed'); }
-            else { console.log('[kafka-producer -> test]: borker success'); }
-        });
-        console.log(push_message);
-    })
+            messages: [
+                { value: JSON.stringify(data) }
+            ],
+        })
+    } catch (error) {
+        throw error;
+    }
 }
 
 exports.getToken = async()=>{
@@ -98,6 +102,24 @@ exports.log = async(params, token)=>{
         .then(response => console.log(response)); */
         //console.log(await res.json());
         return await res.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.log_v2 = async(params, token) => {
+    const data = {
+        params: params,
+        token: token
+    }
+    try {
+        await producer.connect();
+        await producer.send({
+            topic: 'test',
+            messages: [
+                { value: JSON.stringify(data) }
+            ],
+        })
     } catch (error) {
         throw error;
     }
