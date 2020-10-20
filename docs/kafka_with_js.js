@@ -1,25 +1,44 @@
+// crear un topic en kafka
+// docker exec -it name-container bash
+// kafka-topics --zookeeper localhost:2181 --create --topic name-topic --partitions 1 --replication-factor 1
+
 /**
- * Step 1: install package -> kafka-node
+ * Step 1: install package -> kafkajs
  * 
  * Step 2: requerimos el paquete
  */
-const kafka = require('kafka-node');
+const { Kafka } = require('kafkajs');
 
-// declara el cliente kafka
-const client = new kafka.KafkaClient({kafkaHost: '127.0.0.1:9092'});
-
-// consumidor
-let consumer = new kafka.Consumer(client, [{topic: 'test'}]);
-
-consumer.on('message', function (message) {
-    console.log(message);
+const kafka = new Kafka({
+    clientId: 'my-app',
+    brokers: ['localhost:9091']
 });
 
-// productor
-let producer = new kafka.Producer(client);
+// producer
+const producer = kafka.producer();
 
-producer.on('ready', function () {
-    setInterval(function() {
-        producer.send([{topic: "test", messages: "mensaje automática cada 5 seg."}], function(err, data){})
-    }, 5000)
-});
+await producer.connect();
+await producer.send({
+    topic: 'test',
+    messages: [
+        { value: JSON.stringify(data) }
+    ],
+})
+
+// consumer
+const consumer = kafka.consumer({groupId: 'test-group'});
+
+const run = async()=>{
+    await consumer.connect();
+    await consumer.subscribe({ topic: 'test', fromBeginning: true });
+
+    await consumer.run({
+        eachMessage: async({ topic, partition, message }) => {
+            console.log({
+                partition,
+                offset: message.offset,
+                value: message.value.toString()
+            });
+        }
+    })
+}
