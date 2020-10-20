@@ -23,7 +23,7 @@ exports.validatedToken = function ensureToken(req, res, next) {
     if (typeof bearerHeader != 'undefined') {
         const bearerToken = bearerHeader.split(" ")[1];
         req.token = bearerToken;
-        jwt.verify(req.token, `${process.env.KEY}`, (err, data) => {
+        jwt.verify(req.token, `${process.env.TOKEN_KEY}`, (err, data) => {
             if(err) {
                 res.status(403).json({error: 'Unauthorized'});
             } else {
@@ -40,7 +40,7 @@ exports.getBalance = async function (param) {
     try {
         const getBalance = await fetch('https://apigesbanc.herokuapp.com/api/v1/checkbalance/' + param, {
             method: 'GET',
-            headers: {"Content-Type":"application/json"}
+            headers: {"Content-Type":"application/json","Authorization":"Bearer "+process.env.APIGESTBANC_TOKEN}
         });
         return await getBalance.json();
     } catch (error) {
@@ -52,7 +52,7 @@ exports.sendBalance = async (param, account_id) => {
     try {
         const rawResponse = await fetch('https://apigesbanc.herokuapp.com/api/v1/updateamount/' + account_id, {
             method: 'PUT',
-            headers: {"Content-Type":"application/json"},
+            headers: {"Content-Type":"application/json","Authorization":"Bearer "+token.token},
             body: JSON.stringify(param)
         });
         return await rawResponse.json();
@@ -64,7 +64,8 @@ exports.sendBalance = async (param, account_id) => {
 exports.sendBalance_v2 = async function (params, account_id) {
     const data = {
         params: params,
-        account_id: account_id
+        account_id: account_id,
+        token: process.env.APIGESTBANC_TOKEN
     }
     try {
         await producer.connect();
