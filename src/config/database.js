@@ -1,9 +1,10 @@
- const moogose = require("mongoose");
+ const mongoose = require("mongoose");
 
- moogose.connect("mongodb://localhost:27017/transactions",{
+ mongoose.connect("mongodb://mongo/transactions",{
      useCreateIndex: true,
      useFindAndModify: false,
      useNewUrlParser: true
- }).then(db => console.log('Db is connected', db.connection.host));
+ }).then(db => console.log('Db is connected', db.connection.host))
+ .catch(err => console.error(err));
 
- exports.module = moogose;
+ exports.module = mongoose;
