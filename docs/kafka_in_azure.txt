@@ -1,0 +1,20 @@
+se asume que ya tenemos una máquina virtual lista en azure
+la máquina virtual debe tener instalado ubuntu (18.04)
+
+para instalar apache kafka puedes seguir los siguientes pasos, pero si deseas
+conocer más a detalle cada paso puedes dirigirte a este link:
+https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04
+
+una vez que kafka esté instalado y ejecutandose correctamente, debemos exponer
+el puerto por que se expondrá kafka al resto de los servicios o aplicaciones que se
+comunicaran con kafka.
+ingresamos al archivo de configuración de kafka: server.properties
+y modificamos el: advertised.listners
+lo dejamos tal como sigue: 
+    advertised.listners=PLAINTEXT://[ip de nuestra máquina virtual]:9092
+
+Depués procedmos a abrir ese puerto en nuestra máquina virtual,
+en la parte de configuración > redes
+agregamos una nueva regla de entrada.
+
+Y listo!!, apacha kafka está funcionando para gestionar la comunicación entres nuestros microservicios.
