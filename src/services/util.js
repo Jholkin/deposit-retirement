@@ -65,16 +65,17 @@ exports.sendBalance_v2 = async function (params, account_id) {
     const data = {
         params: params,
         account_id: account_id,
-        token: process.env.APIGESTBANC_TOKEN
     }
     try {
         await producer.connect();
         await producer.send({
             topic: 'test',
             messages: [
-                { value: JSON.stringify(data) }
+                { value: JSON.stringify(data), headers: {"Authorization":`Bearer ${process.env.APIGESTBANC_TOKEN}`} }
             ],
-        })
+        });
+
+        await producer.disconnect();
     } catch (error) {
         throw error;
     }
@@ -110,15 +111,14 @@ exports.log = async(params, token)=>{
 
 exports.log_v2 = async(params, token) => {
     const data = {
-        params: params,
-        token: token
+        params: params
     }
     try {
         await producer.connect();
         await producer.send({
             topic: 'test',
             messages: [
-                { value: JSON.stringify(data) }
+                { value: JSON.stringify(data), headers: {"Authorization":`Bearer ${token}`} }
             ],
         })
     } catch (error) {

@@ -11,7 +11,7 @@ comunicaran con kafka.
 ingresamos al archivo de configuración de kafka: server.properties
 y modificamos el: advertised.listners
 lo dejamos tal como sigue: 
-    advertised.listners=PLAINTEXT://[ip de nuestra máquina virtual]:9092
+    advertised.listeners=PLAINTEXT://[ip de nuestra máquina virtual]:9092
 
 Depués procedmos a abrir ese puerto en nuestra máquina virtual,
 en la parte de configuración > redes
