@@ -45,7 +45,7 @@ exports.retirement = async function (params) {
     }
     var balance = await util.getBalance(params.account_id);
     /* if (account == null) throw errors.errorFormat('FORBIDDEN'); */
-    if (!this.isAmountRetirementMinorBalance(params.amount, balance.amount)) {
+    if (!this.isAmountWithdrawLessThanBalance(params.amount, balance.amount)) {
       throw errors.errorFormat("INSUFFICIENT_BALANCE");
     }
 
@@ -78,7 +78,7 @@ exports.retirement = async function (params) {
   }
 };
 
-exports.isAmountRetirementMinorBalance = function (amount, balance) {
+exports.isAmountWithdrawLessThanBalance = function (amount, balance) {
   return amount <= balance ? true : false;
 };
 

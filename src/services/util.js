@@ -78,6 +78,7 @@ exports.sendBalance_v2 = async function (params, account_id) {
     params: params,
     account_id: account_id,
   };
+  console.log("data in sendBalance_v2:",data);
   try {
     await producer.connect();
     await producer.send({
@@ -90,7 +91,7 @@ exports.sendBalance_v2 = async function (params, account_id) {
       ],
     });
 
-    await producer.disconnect();
+    //await producer.disconnect();
   } catch (error) {
     throw error;
   }
