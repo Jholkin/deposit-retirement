@@ -81,6 +81,7 @@ exports.sendBalance_v2 = async function (params, account_id) {
   console.log("data in sendBalance_v2:",data);
   try {
     await producer.connect();
+    console.log("producer connect successful");
     await producer.send({
       topic: "test",
       messages: [
