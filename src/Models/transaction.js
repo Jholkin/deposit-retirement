@@ -1,25 +1,27 @@
-const { model, Schema } = require('mongoose');
-const schema_jsonSchema = require('mongoose-schema-jsonschema/lib/schema');
+const { model, Schema } = require("mongoose");
 
-const SchemaTransaction = new Schema({
+const SchemaTransaction = new Schema(
+  {
     account_id: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     amount: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     operation: {
-        type: Number,
-        require: true,
+      type: Number,
+      require: true,
     },
     movement: {
-        type: String,
-        require: true
-    }
-}, {
+      type: String,
+      require: true,
+    },
+  },
+  {
     timestamps: true,
-})
+  }
+);
 
-module.exports = model('transaction', SchemaTransaction);
+module.exports = model("transaction", SchemaTransaction);

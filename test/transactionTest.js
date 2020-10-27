@@ -32,7 +32,7 @@ describe('Deposit', () => {
     }) */
 })
 
-describe('Retirement', () => {
+describe('Withdraw', () => {
     it('Should retirement ok', async () => {
         let params = { account_id: 98787656789876, amount: 100};
         let balanceBeforeRetirement = util.getBalance(params.account_id);
